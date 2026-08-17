@@ -1,2 +1,2 @@
 // Public config. Flip these when the token is live.
-export const CONFIG = { ticker: "$WHAT", ca: "Epvz3nkqSd8f3ZQKAcaqGJxvucfkogp4SnXHCDNLpump", pump: "https://pump.fun/coin/Epvz3nkqSd8f3ZQKAcaqGJxvucfkogp4SnXHCDNLpump", x: "https://x.com/WhatDog_io", dexscreener: "https://dexscreener.com/solana/Epvz3nkqSd8f3ZQKAcaqGJxvucfkogp4SnXHCDNLpump", url: "https://whatwoulddogdo.vercel.app" };
+export const CONFIG = { ticker: "$WHAT", ca: "H3mc7QKw5KEiDgefhUJhBMeXr5J5RThPZ2SCZYwhpump", pump: "https://pump.fun/coin/H3mc7QKw5KEiDgefhUJhBMeXr5J5RThPZ2SCZYwhpump", x: "https://x.com/WhatDog_io", dexscreener: "https://dexscreener.com/solana/H3mc7QKw5KEiDgefhUJhBMeXr5J5RThPZ2SCZYwhpump", url: "https://whatwoulddogdo.vercel.app" };
