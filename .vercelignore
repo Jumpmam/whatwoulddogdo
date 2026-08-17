@@ -5,6 +5,8 @@ config.local.js
 .env*
 .DS_Store
 ChatGPT Image *.png
+Untitled image*.png
+Screenshot *.png
 Screen Recording *.mov
 SKILL.md
 CLAUDE_SKILL.md
