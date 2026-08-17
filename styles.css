@@ -39,12 +39,11 @@ body.glitch #stage { transform: translate3d(2px, -1px, 0); filter: contrast(1.25
 
 #mark {
   top: clamp(42px, 7vh, 74px); left: 50%; translate: -50% 0;
-  margin: 0; width: clamp(230px, 42vw, 460px); text-align: center;
-  font-family: var(--sans); font-weight: 700; font-size: clamp(26px, 5.4vw, 46px); line-height: 1.02;
-  color: var(--acid); text-transform: lowercase; letter-spacing: -.01em;
+  margin: 0; width: clamp(230px, 42vw, 460px);
   filter: drop-shadow(0 0 18px rgba(216, 240, 0, .35));
   pointer-events: none;
 }
+#mark img { display: block; width: 100%; height: auto; }
 
 #readout {
   left: 0; right: 0; bottom: clamp(96px, 15vh, 132px);
