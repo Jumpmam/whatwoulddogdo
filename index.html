@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>what would dog do</title>
+<meta name="description" content="A camera on a padded cell. The dog in it discharges at nothing, on his own clock, and you are only watching.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%230a0a08%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22%23d8f000%22>?</text></svg>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="what would dog do">
+<meta property="og:description" content="One dog. One padded cell. He does something at nothing every few seconds and none of it is yours to trigger.">
+<meta property="og:url" content="https://whatwoulddogdo.vercel.app/">
+<meta property="og:image" content="https://whatwoulddogdo.vercel.app/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://whatwoulddogdo.vercel.app/assets/og.png">
+<link rel="canonical" href="https://whatwoulddogdo.vercel.app/">
+<script>
+window.addEventListener('error', function (e) {
+  var b = document.createElement('div');
+  b.style.cssText = 'position:fixed;z-index:99;left:0;right:0;bottom:0;background:#d8f000;color:#000;font:12px/1.4 monospace;padding:8px;white-space:pre-wrap';
+  b.textContent = 'CAMERA FAULT: ' + (e.message || e.type);
+  document.body && document.body.appendChild(b);
+});
+</script>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main id="frame">
+  <canvas id="stage" aria-label="A padded cell, seen from a corner camera. A dog stands in it."></canvas>
+  <div id="grain" aria-hidden="true"></div>
+
+  <header id="hud">
+    <span id="rec"><i></i>REC</span>
+    <span id="cam">CAM 02</span>
+    <span id="clock" aria-live="off">--:--:-- UTC</span>
+  </header>
+
+  <h1 id="mark">what would<br>dog do</h1>
+
+  <div id="readout">
+    <p id="act">STILL</p>
+    <div id="meter">
+      <span class="tag">DRIVE</span>
+      <div id="gauge" role="img" aria-label="drive"><span id="fill"></span></div>
+    </div>
+  </div>
+
+  <button id="ask" type="button">ASK</button>
+
+  <footer id="rail">
+    <a id="pump" href="#" rel="noopener">pump</a>
+    <a id="x" href="#" rel="noopener">x</a>
+    <a id="dex" href="#" rel="noopener">dex</a>
+    <button id="ca" type="button" title="contract">CA</button>
+  </footer>
+</main>
+
+<dialog id="answer">
+  <img id="shot" alt="The frame at the moment you asked">
+  <div id="slug">
+    <p id="verdict">STILL</p>
+    <p id="stamp">--:--:-- UTC</p>
+  </div>
+  <p id="note">the answer is whatever he was doing when you asked</p>
+  <div id="acts">
+    <button id="save" type="button">SAVE</button>
+    <button id="close" type="button">CLOSE</button>
+  </div>
+</dialog>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>

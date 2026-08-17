@@ -1,0 +1,9 @@
+node_modules
+.build-fonts
+config.local.js
+.env.local
+.DS_Store
+.vercel
+.env*
+ChatGPT Image *.png
+Screen Recording *.mov
