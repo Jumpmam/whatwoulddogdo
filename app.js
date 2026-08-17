@@ -255,60 +255,91 @@ function createStage(canvas) {
     roomLayer = null;
   }
 
+  const HORIZON_FRAC = 0.35;
+
   function buildRoom() {
     const off = document.createElement('canvas');
     off.width = Math.round(cw); off.height = Math.round(ch);
     const rc = off.getContext('2d');
-    const g = rc.createLinearGradient(0, 0, 0, ch);
-    g.addColorStop(0, '#3a3a36');
-    g.addColorStop(0.55, '#222220');
-    g.addColorStop(1, '#131311');
-    rc.fillStyle = g;
-    rc.fillRect(0, 0, cw, ch);
+    const horizonY = ch * HORIZON_FRAC;
+    const vpX = cw * 0.5;
 
-    const vpX = cw * 0.5, vpY = ch * 0.34;
-    const cols = 9, rows = 6;
-    for (let r = 0; r <= rows; r++) {
-      const rowT = r / rows;
-      const y = vpY + (ch * 1.05 - vpY) * rowT * rowT;
-      const spread = (0.18 + 0.92 * rowT);
-      const padSize = 26 + 90 * rowT;
-      for (let c = 0; c <= cols; c++) {
-        const colT = c / cols - 0.5;
-        const x = vpX + colT * cw * 1.5 * spread;
-        if (x < -padSize || x > cw + padSize || y < vpY - 20) continue;
-        const shade = 40 + Math.round(28 * (1 - rowT)) + Math.round(hash(r, c * 13) * 10);
+    // walls: pads grow larger and spread wider toward the horizon (near), shrink toward the top (far)
+    const wallGrad = rc.createLinearGradient(0, 0, 0, horizonY);
+    wallGrad.addColorStop(0, '#232320');
+    wallGrad.addColorStop(1, '#3c3b33');
+    rc.fillStyle = wallGrad;
+    rc.fillRect(0, 0, cw, horizonY);
+
+    const rows = 6;
+    for (let r = 0; r < rows; r++) {
+      const t0 = r / rows, t1 = (r + 1) / rows;
+      const y0 = horizonY * Math.pow(t0, 1.7);
+      const y1 = horizonY * Math.pow(t1, 1.7);
+      const rowH = y1 - y0;
+      const padSize = Math.max(12, rowH * 0.9);
+      const spread = 0.22 + 1.3 * t1;
+      const cols = 3 + Math.round(4 * t1);
+      for (let c = -cols; c <= cols; c++) {
+        const x = vpX + (c / cols) * cw * 0.6 * spread;
+        const y = y0 + rowH / 2;
+        if (x < -padSize || x > cw + padSize) continue;
+        const seed = hash(r * 13 + 3, c * 31 + 7);
+        const base = 44 + Math.round(22 * t1) + Math.round(seed * 10);
         rc.save();
         rc.translate(x, y);
-        rc.fillStyle = `rgb(${shade + 26},${shade + 22},${shade + 16})`;
+        rc.fillStyle = `rgb(${base + 20},${base + 18},${base + 12})`;
         rc.beginPath();
-        rc.roundRect(-padSize / 2, -padSize / 2, padSize, padSize, padSize * 0.14);
+        rc.roundRect(-padSize / 2, -padSize / 2, padSize, padSize, padSize * 0.16);
         rc.fill();
-        rc.fillStyle = `rgba(0,0,0,${0.35 + 0.1 * rowT})`;
+        rc.fillStyle = `rgba(255,255,255,${0.05 + 0.05 * t1})`;
         rc.beginPath();
-        rc.arc(0, 0, Math.max(1.4, padSize * 0.05), 0, Math.PI * 2);
+        rc.arc(-padSize * 0.2, -padSize * 0.22, Math.max(1, padSize * 0.15), 0, Math.PI * 2);
         rc.fill();
-        if (hash(r * 31, c * 7) > 0.93) {
-          rc.fillStyle = `rgba(120,20,20,${0.18 + hash(r, c) * 0.2})`;
+        rc.fillStyle = `rgba(0,0,0,${0.32 + 0.12 * t1})`;
+        rc.beginPath();
+        rc.arc(padSize * 0.16, padSize * 0.18, Math.max(1.2, padSize * 0.07), 0, Math.PI * 2);
+        rc.fill();
+        if (hash(r * 31 + 2, c * 7 + 5) > 0.94) {
+          rc.fillStyle = `rgba(120,20,20,${0.15 + seed * 0.15})`;
           rc.beginPath();
-          rc.ellipse(padSize * 0.15, padSize * 0.1, padSize * 0.22, padSize * 0.14, 0.4, 0, Math.PI * 2);
+          rc.ellipse(padSize * 0.12, padSize * 0.06, padSize * 0.22, padSize * 0.13, 0.4, 0, Math.PI * 2);
           rc.fill();
         }
         rc.restore();
       }
     }
-    rc.fillStyle = 'rgba(0,0,0,0.35)';
+
+    // recessed door on the left wall, converging to the same vanishing point
+    rc.fillStyle = 'rgba(0,0,0,0.42)';
     rc.beginPath();
-    rc.moveTo(vpX, vpY);
-    rc.lineTo(vpX - 22, vpY + 26);
-    rc.lineTo(vpX - 40, vpY + 210);
-    rc.lineTo(vpX - 4, vpY + 210);
+    rc.moveTo(vpX - cw * 0.1, horizonY * 0.5);
+    rc.lineTo(vpX - cw * 0.19, horizonY * 0.6);
+    rc.lineTo(vpX - cw * 0.18, horizonY * 0.99);
+    rc.lineTo(vpX - cw * 0.08, horizonY * 0.99);
     rc.closePath();
     rc.fill();
 
-    const vg = rc.createRadialGradient(cw / 2, ch * 0.42, ch * 0.15, cw / 2, ch * 0.5, ch * 0.85);
+    // floor plane, distinct from the walls, with seams converging to the horizon
+    const floorGrad = rc.createLinearGradient(0, horizonY, 0, ch);
+    floorGrad.addColorStop(0, '#34322b');
+    floorGrad.addColorStop(0.5, '#211f1a');
+    floorGrad.addColorStop(1, '#121110');
+    rc.fillStyle = floorGrad;
+    rc.fillRect(0, horizonY, cw, ch - horizonY);
+
+    rc.strokeStyle = 'rgba(0,0,0,0.22)';
+    rc.lineWidth = 1;
+    for (let i = -4; i <= 4; i++) {
+      rc.beginPath();
+      rc.moveTo(vpX, horizonY);
+      rc.lineTo(vpX + i * cw * 0.16, ch);
+      rc.stroke();
+    }
+
+    const vg = rc.createRadialGradient(cw / 2, horizonY + (ch - horizonY) * 0.3, ch * 0.1, cw / 2, ch * 0.52, ch * 0.85);
     vg.addColorStop(0, 'rgba(0,0,0,0)');
-    vg.addColorStop(1, 'rgba(0,0,0,0.55)');
+    vg.addColorStop(1, 'rgba(0,0,0,0.58)');
     rc.fillStyle = vg;
     rc.fillRect(0, 0, cw, ch);
 
@@ -316,7 +347,7 @@ function createStage(canvas) {
   }
 
   function worldToScreen(X, Z, panX) {
-    const horizonY = ch * 0.36, floorY = ch * 0.965;
+    const horizonY = ch * HORIZON_FRAC, floorY = ch * 0.965;
     const focal = floorY - horizonY;
     const y = horizonY + focal / (Z / ZNEAR);
     const halfW = roomHalfWidthAt(Z);
@@ -356,7 +387,7 @@ function createStage(canvas) {
     else if (clamped.X < anchorX - deadzone) anchorX = clamped.X + deadzone;
 
     const proj = worldToScreen(clamped.X, clamped.Z, anchorX);
-    const baseH = ch * 0.64;
+    const baseH = ch * 0.74;
     const dogH = baseH * proj.scale * Math.abs(pose.sy) * (cw < 760 ? 1.1 : 1);
     const aspect = dogReady && dogImg.naturalWidth ? dogImg.naturalWidth / dogImg.naturalHeight : 0.56;
     const dogW = dogH * aspect * Math.abs(pose.sx) * (pose.sx < 0 ? -1 : 1);

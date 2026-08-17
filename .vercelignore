@@ -6,3 +6,5 @@ config.local.js
 .DS_Store
 ChatGPT Image *.png
 Screen Recording *.mov
+SKILL.md
+CLAUDE_SKILL.md

@@ -7,3 +7,5 @@ config.local.js
 .env*
 ChatGPT Image *.png
 Screen Recording *.mov
+SKILL.md
+CLAUDE_SKILL.md

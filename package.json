@@ -13,6 +13,7 @@
   "dependencies": {
     "@fontsource/azeret-mono": "^5.3.0",
     "@fontsource/familjen-grotesk": "^5.3.0",
-    "@resvg/resvg-js": "^2.6.2"
+    "@resvg/resvg-js": "^2.6.2",
+    "@resvg/resvg-js-darwin-arm64": "^2.6.2"
   }
 }
